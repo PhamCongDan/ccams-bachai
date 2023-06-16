@@ -23,10 +23,10 @@ const Sidebar = () => {
           <Link
             key={item.path}
             href={item.path}
-            className={`block text-secondary p-2 hover:bg-secondary hover:bg-opacity-20 transition ease-out rounded-md mt-2 first:mt-0 ${
+            className={`block p-2 hover:bg-opacity-20 transition ease-out rounded-md mt-2 first:mt-0 ${
               router.pathname === item.path
                 ? "text-primary bg-primary bg-opacity-20 font-bold hover:bg-primary"
-                : ""
+                : "text-secondary hover:bg-secondary"
             }`}
           >
             {item.label}
