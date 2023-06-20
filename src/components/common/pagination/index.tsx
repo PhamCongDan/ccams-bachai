@@ -62,8 +62,7 @@ const Pagination = (props: IPagination) => {
     )
   }
   return (
-    sumPages !== 1 &&
-    <div className="flex gap-2 justify-end">
+    <div className={`${sumPages !== 1 ? 'hidden' : 'flex gap-2 justify-end '}`}>
       {arrowButton('previous')}
       {currentPage()}
       {arrowButton('next')}
