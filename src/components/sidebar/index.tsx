@@ -17,7 +17,7 @@ const Sidebar = () => {
   const router = useRouter();
 
   return (
-    <div className="min-h-full bg-white border-r border-[#E0E0E0] w-[300px] p-4">
+    <div className="min-h-full bg-white border-r border-[#E0E0E0] w-[300px] float-left p-4">
       {MENU.map((item, index) => {
         return (
           <Link
