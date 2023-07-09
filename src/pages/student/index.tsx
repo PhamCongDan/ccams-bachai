@@ -4,13 +4,18 @@ import { Table, Column } from "react-virtualized/dist/commonjs/Table";
 import FilterStudent from "@/components/filter-student";
 import useSWR from "swr";
 import axios from "axios";
-import { getAllStudent } from "pages/api/students";
+import { getAllStudent } from "pages/api/student";
 import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Pagination from "@/components/common/pagination";
 
 const HomePage = ({ studentData }: any) => {
   const { page, totalCount, pageSize, data: students } = studentData;
+  const router = useRouter();
+
+  const moveToDetail = (id: string) => {
+    router.push(`/student/${id}`)
+  }
 
   return (
     <div>
@@ -37,7 +42,8 @@ const HomePage = ({ studentData }: any) => {
               headerClassName="text-red-500"
               headerStyle={{ margin: 0 }}
               rowStyle={{ margin: 0 }}
-              rowClassName="border-b flex items-center"
+              rowClassName="border-b flex items-center hover:bg-secondary hover:bg-opacity-10 transition ease-out cursor-pointer"
+              onRowClick={({ rowData }) => moveToDetail(rowData.id)}
             >
               <Column
                 label="STT"

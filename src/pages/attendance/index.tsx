@@ -8,7 +8,7 @@ const AttendancePage = () => {
         <title>Điểm danh</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="p-8">
+      <div className="ml-[300px] p-8">
         day la Điểm danh
       </div>
     </div>

@@ -1,8 +1,26 @@
-import { dbConfig } from 'helper/api';
+import { dbConfig, querySQL } from 'helper/api';
 import type { NextApiHandler } from 'next';
 const sql = require('mssql');
 
 const PAGE_SIZE = 100;
+
+export const getAllStudentIds = async () => {
+  const queryStr = `
+    SELECT [HOCVIEN].MAHOCVIEN
+    FROM [HOCVIEN]
+  `;
+  try {
+    const res = await querySQL(queryStr) as any;
+    // console.log(res);
+    return res.map((item: { MAHOCVIEN: string }) => {
+      return {
+        id: item.MAHOCVIEN
+      }
+    })
+  } catch (e) {
+    console.log(e)
+  }
+};
 
 export const getAllStudent = async (page = 1) => {
   const queryStr = `
@@ -70,7 +88,7 @@ export const getAllStudent = async (page = 1) => {
 
 const studentHandler: NextApiHandler = async (request, response) => {
   const { method, query } = request;
-  console.log(query);
+  // console.log(query);
   
   switch(method) {
     case 'GET':
