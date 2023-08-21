@@ -125,11 +125,11 @@ export default HomePage;
 //   };
 // }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { query: { page } } = context;
-  const res = Number(page) ? await getAllStudent(Number(page)) : await getAllStudent(1);
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const { query: { page } } = context;
+//   const res = Number(page) ? await getAllStudent(Number(page)) : await getAllStudent(1);
   
-  // const res = await fetch('https://api.github.com/repos/vercel/next.js')
-  // const repo = await res.json()
-  return { props: { studentData: res } }
-}
+//   // const res = await fetch('https://api.github.com/repos/vercel/next.js')
+//   // const repo = await res.json()
+//   return { props: { studentData: res } }
+// }
