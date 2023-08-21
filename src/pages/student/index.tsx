@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Table, Column } from "react-virtualized/dist/commonjs/Table";
 import FilterStudent from "@/components/filter-student";
@@ -10,14 +10,26 @@ import { useRouter } from "next/router";
 import Pagination from "@/components/common/pagination";
 
 const HomePage = ({ studentData }: any) => {
-  const { page, totalCount, pageSize, data: students } = studentData;
+  // const { page, totalCount, pageSize, data: students } = studentData;
   const router = useRouter();
+
+  const [students, setStudents] = useState([]);
 
   const moveToDetail = (id: string) => {
     router.pathname = '/student/detail';
     router.query.id = id;
     router.push(router)
   }
+
+  const getLstStudent = async () => {
+    const res = await axios.get('/api/student')
+    setStudents(res?.data.data)
+  }
+
+  useEffect(() => {
+    getLstStudent()
+  }, [])
+
 
   return (
     <div>
@@ -26,7 +38,7 @@ const HomePage = ({ studentData }: any) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="ml-[300px] p-8">
-        {totalCount} {page} {pageSize}
+        {/* {totalCount} {page} {pageSize} */}
         <FilterStudent />
         {/* table */}
         {students?.length && (
@@ -75,7 +87,7 @@ const HomePage = ({ studentData }: any) => {
               />
               <Column label="GLV" dataKey="teacher" width={400} maxWidth={400} />
             </Table>
-            <Pagination activePage={page} pageSize={pageSize} totalCount={totalCount} />
+            {/* <Pagination activePage={page} pageSize={pageSize} totalCount={totalCount} /> */}
           </>
         )}
       </div>

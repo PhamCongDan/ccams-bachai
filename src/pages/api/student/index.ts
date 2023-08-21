@@ -53,7 +53,7 @@ export const getAllStudent = async (page = 1) => {
       const data = await query.query(`${queryStr}`);
       connect.close();
 
-      const lstData = data.recordset.slice(PAGE_SIZE * page - PAGE_SIZE, PAGE_SIZE * page).map((item: {
+      const lstData = data.recordset.map((item: {
         TENLOPHOC: string;
         TENTHANHGLV: string;
         HOGLV: string;
@@ -75,8 +75,8 @@ export const getAllStudent = async (page = 1) => {
 
       return {
         page: page,
-        totalCount: data.recordset.length,
-        pageSize: PAGE_SIZE,
+        // totalCount: data.recordset.length,
+        // pageSize: PAGE_SIZE,
         data: lstData
       }
     } catch (err) {
