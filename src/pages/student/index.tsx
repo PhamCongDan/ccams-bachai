@@ -14,7 +14,9 @@ const HomePage = ({ studentData }: any) => {
   const router = useRouter();
 
   const moveToDetail = (id: string) => {
-    router.push(`/student/${id}`)
+    router.pathname = '/student/detail';
+    router.query.id = id;
+    router.push(router)
   }
 
   return (

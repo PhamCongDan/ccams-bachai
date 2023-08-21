@@ -1,11 +1,8 @@
-import Head from 'next/head'
-import React, { useEffect, useMemo } from 'react'
-import { AttendanceStudent, BasicInformation, ExamResult, OldSummaryScholastic } from '@/components/detail-student'
-import { useRouter } from 'next/router'
-import axios from 'axios'
-import { GetStaticPaths, GetStaticProps } from 'next'
-import { getAllStudent, getAllStudentIds } from 'pages/api/student'
-import { getDetailStudent } from 'pages/api/student/[id]/index';
+import { AttendanceStudent, BasicInformation, ExamResult, OldSummaryScholastic } from '@/components/detail-student';
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { getDetailStudent } from 'pages/api/student/[id]';
+import React, { useMemo } from 'react'
 
 interface IStudent {
   id: string;
@@ -54,31 +51,8 @@ const StudentDetailPage = ({ student }: { student: IStudent }) => {
 
 export default StudentDetailPage;
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await getAllStudentIds();
-  const studentId = response.map((item: { id: string }) => {
-    return {
-      params: { id: item.id }
-    }
-  })
-
-  return {
-    paths: studentId,
-    fallback: false
-  }
-}
-
-export const getStaticProps: GetStaticProps = async (context) => {
-  const { params } = context;  
-  const res = await getDetailStudent(params?.id)
-  // console.log(res);
-  
-  // const data = await response.json()
-  // console.log(data);
-
-  return {
-    props: {
-      student: res,
-    },
-  };
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { query: { id } } = context;
+  const res = id ? await getDetailStudent(id) : null;
+  return { props: { student: res } }
 }
