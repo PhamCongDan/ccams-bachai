@@ -13,9 +13,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <Header />
-      <div className="h-screen bg-[#FAFAFA]">
+      <div className="flex min-h-screen bg-[#FAFAFA]">
         <Sidebar />
-        <Component {...pageProps} />
+        <div className='w-full'>
+          <Component {...pageProps} />
+        </div>
       </div>
       {isLoading && <Loading />}
     </Provider>

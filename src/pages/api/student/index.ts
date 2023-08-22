@@ -1,4 +1,4 @@
-import { dbConfig, querySQL } from 'helper/api';
+import { dbConfig, querySQL } from 'helper/database';
 import type { NextApiHandler } from 'next';
 const sql = require('mssql');
 

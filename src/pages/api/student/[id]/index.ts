@@ -1,8 +1,51 @@
-import { dbConfig, querySQL } from "helper/api";
+import { querySQL } from "helper/database";
 import { NextApiHandler } from "next";
-const sql = require('mssql');
 
-export const getDetailStudent = async (id: string | string[] | undefined) => {
+const getAttendanceStudent = async (id: string | string[] | undefined) => {
+  if (!id) return;
+  const queryStr = `
+      SELECT top 30
+        [DIEM_DANH].ID,
+        [DIEM_DANH].MAHOCVIEN,
+        [DIEM_DANH].NGAYDIEMDANH,
+        [DIEM_DANH].NGUOI_DIEMDANH,
+        [GIAOLYVIEN].TENTHANH AS TENTHANHGLV,
+        [GIAOLYVIEN].HOCANHAN AS HOGLV,
+        [GIAOLYVIEN].TENCANHAN AS TENGLV
+      FROM [DIEM_DANH]
+      LEFT OUTER JOIN [GIAOLYVIEN] ON [GIAOLYVIEN].MAGLV = [DIEM_DANH].NGUOI_DIEMDANH
+      WHERE [DIEM_DANH].MAHOCVIEN = '${id}'
+      ORDER BY NGAYDIEMDANH DESC
+    `;
+  try {
+    const res = await querySQL(queryStr) as any;    
+    const result = res.length && res.map((item: {
+        ID: string,
+        NGAYDIEMDANH: string,
+        NGUOI_DIEMDANH: string,
+        TENTHANHGLV: string,
+        HOGLV: string,
+        TENGLV: string,
+      }) => {
+      return {
+        id: item.ID,
+        attendanceDate: `${new Date(item.NGAYDIEMDANH).getDate().toString().padStart(2, '0')}-${
+          (new Date(item.NGAYDIEMDANH).getMonth() + 1).toString().padStart(2, '0')}-${
+            new Date(item.NGAYDIEMDANH).getFullYear()
+          }`,
+        teacher: `${item.TENTHANHGLV} ${item.HOGLV} ${item.TENGLV}`
+      }
+    })
+    console.log(result);
+    
+    return result;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+}
+
+const getInformationStudent = async (id: string | string[] | undefined) => {
   if (!id) return;
   const queryStr = `
       SELECT DISTINCT 
@@ -63,20 +106,27 @@ export const getDetailStudent = async (id: string | string[] | undefined) => {
     }
 }
 
+export const getDetailStudent = async (id: string | string[] | undefined) => {
+  const basicInformation = await getInformationStudent(id);
+  const attendance = await getAttendanceStudent(id);  
+  return {
+    basicInformation: { ...basicInformation },
+    attendance: [...attendance],
+  }
+}
+
 const studentHandler: NextApiHandler = async (request, response) => {
   const { method, query } = request;
-  // console.log(query, 1);
   const { id } = query;
 
-  if (!id) response.status(400).json({ message: `'id' is required` })
+  if (!id) {
+    response.status(400).json({ message: `'id' is required` })
+    return;
+  }
   switch(method) {
-    case 'GET':
-      console.log('code chasdasdas');
-      
+    case 'GET':      
       const student = await getDetailStudent(id);
       response.json({ ...student })
-      
-      // response.json(lstStudent)
       return;
     default:
       break;

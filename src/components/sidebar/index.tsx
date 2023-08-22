@@ -17,14 +17,14 @@ const Sidebar = () => {
   const router = useRouter();
 
   return (
-    <div className="min-h-full bg-white border-r border-[#E0E0E0] w-[300px] float-left p-4">
+    <div className="min-h-full bg-white border-r border-[#E0E0E0] basis-[300px] shrink-0 float-left p-4">
       {MENU.map((item, index) => {
         return (
           <Link
             key={item.path}
             href={item.path}
             className={`block p-2 hover:bg-opacity-20 transition ease-out rounded-md mt-2 first:mt-0 ${
-              router.pathname === item.path
+              router.pathname.includes(item.path)
                 ? "text-primary bg-primary bg-opacity-20 font-bold hover:bg-primary"
                 : "text-secondary hover:bg-secondary"
             }`}

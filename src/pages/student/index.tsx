@@ -9,7 +9,7 @@ import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Pagination from "@/components/common/pagination";
 
-const HomePage = ({ studentData }: any) => {
+const HomePage = () => {
   // const { page, totalCount, pageSize, data: students } = studentData;
   const router = useRouter();
 
@@ -23,7 +23,7 @@ const HomePage = ({ studentData }: any) => {
 
   const getLstStudent = async () => {
     const res = await axios.get('/api/student')
-    setStudents(res?.data.data)
+    setStudents(res?.data?.data ?? {})
   }
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const HomePage = ({ studentData }: any) => {
         <title>Thông tin thiếu nhi</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="ml-[300px] p-8">
+      <div className="p-8">
         {/* {totalCount} {page} {pageSize} */}
         <FilterStudent />
         {/* table */}
@@ -96,40 +96,3 @@ const HomePage = ({ studentData }: any) => {
 };
 
 export default HomePage;
-
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const response = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-//   // const data = await response.json()
-//   const paths = response.map((page: number) => {
-//     return {
-//       params: { page: `${page}` }
-//     }
-//   })
-
-//   return {
-//     paths: paths,
-//     fallback: false
-//   }
-// }
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   const res = await getAllStudent(10);
-
-//   // const data = await response.json()
-//   // console.log(data);
-
-//   return {
-//     props: {
-//       students: res,
-//     },
-//   };
-// }
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const { query: { page } } = context;
-//   const res = Number(page) ? await getAllStudent(Number(page)) : await getAllStudent(1);
-  
-//   // const res = await fetch('https://api.github.com/repos/vercel/next.js')
-//   // const repo = await res.json()
-//   return { props: { studentData: res } }
-// }
