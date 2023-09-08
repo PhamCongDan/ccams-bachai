@@ -21,7 +21,8 @@ interface IStudent {
     className: string;
     catholicity: string;
   },
-  attendance: any[]
+  attendance: any[],
+  historyScholastic: any[],
 }
 
 const StudentDetailPage = ({ student }: { student: IStudent }) => {  
@@ -39,7 +40,7 @@ const StudentDetailPage = ({ student }: { student: IStudent }) => {
         <BasicInformation student={student.basicInformation} />
         <AttendanceStudent attendanceData={student.attendance} />
         <ExamResult />
-        <OldSummaryScholastic />
+        <OldSummaryScholastic historyScholastic={student.historyScholastic} />
       </div>
     </div>
   )

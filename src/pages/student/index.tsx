@@ -4,7 +4,6 @@ import { Table, Column } from "react-virtualized/dist/commonjs/Table";
 import FilterStudent from "@/components/filter-student";
 import useSWR from "swr";
 import axios from "axios";
-import { getAllStudent } from "pages/api/student";
 import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Pagination from "@/components/common/pagination";
@@ -29,7 +28,6 @@ const HomePage = () => {
   useEffect(() => {
     getLstStudent()
   }, [])
-
 
   return (
     <div>

@@ -66,6 +66,10 @@ const BasicInformation = ({ student }: { student: IStudent }) => {
           <div className="basis-1/5">SĐT</div>
           <div className="basis-2/5">{phone.filter((item: string) => item ? item : null ).join(' - ')}</div>
         </div>
+        <div className="flex flex-row">
+          <div className="basis-1/5">GLV</div>
+          <div className="basis-2/5">{teacher}</div>
+        </div>
       </div>
     </section>
   )

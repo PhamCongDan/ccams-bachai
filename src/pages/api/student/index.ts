@@ -22,7 +22,21 @@ export const getAllStudentIds = async () => {
   }
 };
 
-export const getAllStudent = async (page = 1) => {
+export const getCurrentScholastic = async () => {
+  const queryStr = `
+    SELECT [NIENHOC].MANIENHOC
+    FROM [NIENHOC]
+  `
+  try {
+    const data = await querySQL(queryStr) as any;
+    const currentSchlolastic = data[data.length - 1].MANIENHOC;
+    return currentSchlolastic;
+  } catch (e) {
+    return '1';
+  }
+}
+
+export const getAllStudent = async (scholasticId: string) => {
   const queryStr = `
     SELECT DISTINCT 
       [HOCVIEN].MAHOCVIEN,
@@ -41,7 +55,7 @@ export const getAllStudent = async (page = 1) => {
       LEFT OUTER JOIN [DAY_LOP] ON [DAY_LOP].MALOPHOC = [LOPHOC].MALOPHOC
       LEFT OUTER JOIN [GIAOLYVIEN] ON [GIAOLYVIEN].MAGLV = [DAY_LOP].MAGLV
 
-      WHERE [THEOHOC].MANIENHOC='3'
+      WHERE [THEOHOC].MANIENHOC='${scholasticId}'
       and [DAY_LOP].VAITRO != 'GLV1'
       ORDER BY [HOCVIEN].TENCANHAN
     `;
@@ -74,7 +88,7 @@ export const getAllStudent = async (page = 1) => {
       })
 
       return {
-        page: page,
+        // page: page,
         // totalCount: data.recordset.length,
         // pageSize: PAGE_SIZE,
         data: lstData
@@ -92,7 +106,8 @@ const studentHandler: NextApiHandler = async (request, response) => {
   
   switch(method) {
     case 'GET':
-      const lstStudent = await getAllStudent();
+      const currentSchlolastic = await getCurrentScholastic();      
+      const lstStudent = await getAllStudent(currentSchlolastic);
       response.json(lstStudent)
       return;
     default:
