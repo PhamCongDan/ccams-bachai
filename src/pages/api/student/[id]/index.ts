@@ -1,21 +1,27 @@
 import { querySQL } from "helper/database";
 import { NextApiHandler } from "next";
 import { getCurrentScholastic } from "..";
+import { formatDateToString } from "helper/utils";
 
 const getAttendanceStudent = async (id: string | string[] | undefined) => {
   if (!id) return [];
+  const today = new Date();
+  const lastYear = new Date(new Date().setFullYear(today.getFullYear() - 1));
   const queryStr = `
-      SELECT top 30
+      SELECT
         [DIEM_DANH].ID,
         [DIEM_DANH].MAHOCVIEN,
         [DIEM_DANH].NGAYDIEMDANH,
         [DIEM_DANH].NGUOI_DIEMDANH,
         [GIAOLYVIEN].TENTHANH AS TENTHANHGLV,
         [GIAOLYVIEN].HOCANHAN AS HOGLV,
-        [GIAOLYVIEN].TENCANHAN AS TENGLV
+        [GIAOLYVIEN].TENCANHAN AS TENGLV,
+        [DIEM_DANH].LOAI
       FROM [DIEM_DANH]
       LEFT OUTER JOIN [GIAOLYVIEN] ON [GIAOLYVIEN].MAGLV = [DIEM_DANH].NGUOI_DIEMDANH
       WHERE [DIEM_DANH].MAHOCVIEN = '${id}'
+      AND [DIEM_DANH].NGAYDIEMDANH < '${formatDateToString(today)}'
+      AND [DIEM_DANH].NGAYDIEMDANH > '${formatDateToString(lastYear)}'
       ORDER BY NGAYDIEMDANH DESC
     `;
   try {
@@ -28,15 +34,16 @@ const getAttendanceStudent = async (id: string | string[] | undefined) => {
       TENTHANHGLV: string,
       HOGLV: string,
       TENGLV: string,
+      LOAI: string
     }) => {
       return {
         id: item.ID,
-        attendanceDate: `${new Date(item.NGAYDIEMDANH).getDate().toString().padStart(2, '0')}-${(new Date(item.NGAYDIEMDANH).getMonth() + 1).toString().padStart(2, '0')}-${new Date(item.NGAYDIEMDANH).getFullYear()
-          }`,
-        teacher: `${item.TENTHANHGLV} ${item.HOGLV} ${item.TENGLV}`
+        attendanceDate: `${formatDateToString(new Date(item.NGAYDIEMDANH))}`,
+        teacher: `${item.TENTHANHGLV} ${item.HOGLV} ${item.TENGLV}`,
+        type: item.LOAI
       }
     })
-    
+
     return result;
   } catch (err) {
     console.log(err);
@@ -76,7 +83,7 @@ const getInformationStudent = async (id: string | string[] | undefined) => {
 
       WHERE [HOCVIEN].MAHOCVIEN = '${id}'
       AND [DAY_LOP].VAITRO != 'GLV1'
-      /* AND [THEOHOC].NGAYXOA IS NULL */
+      AND [THEOHOC].NGAYXOA IS NULL
     `;
 
   try {
@@ -91,8 +98,7 @@ const getInformationStudent = async (id: string | string[] | undefined) => {
       saintName: currentScholastic.TENTHANH,
       lastName: currentScholastic.HOCANHAN,
       firstName: currentScholastic.TENCANHAN,
-      bod: `${new Date(currentScholastic.NGAYSINH).getDate().toString().padStart(2, '0')}-${(new Date(currentScholastic.NGAYSINH).getMonth() + 1).toString().padStart(2, '0')}-${new Date(currentScholastic.NGAYSINH).getFullYear()
-        }`,
+      bod: formatDateToString(new Date(currentScholastic.NGAYSINH)),
       phone: [currentScholastic.SODIENTHOAI, currentScholastic.SODIENTHOAI2],
       fatherName: currentScholastic.HOTENPHCHA,
       motherName: currentScholastic.HOTENPHME,
@@ -108,7 +114,7 @@ const getInformationStudent = async (id: string | string[] | undefined) => {
         className: item.TENLOPHOC,
       }
     });
-  
+
     return { basicInformation: result, historyScholastic: historyData };
   } catch (err) {
     console.log(err);
@@ -118,10 +124,10 @@ const getInformationStudent = async (id: string | string[] | undefined) => {
 
 export const getDetailStudent = async (id: string | string[] | undefined) => {
   const basicInformation = await getInformationStudent(id);
-  const attendance = await getAttendanceStudent(id);  
+  const attendance = await getAttendanceStudent(id);
   return {
     ...basicInformation,
-    attendance: [ ...attendance ],
+    attendance: [...attendance],
   }
 }
 

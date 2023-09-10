@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Dropdown from '@/components/common/dropdown';
 import DropdownItem from '@/components/common/dropdown/DropdownItem';
 import axios from 'axios';
-import useSWR from 'swr';
 
 const UNIT_MENU = [
   {
@@ -36,27 +35,34 @@ const FilterStudent = () => {
   const [unit, setUnit] = useState('');
 
   const changeUnit = async (unitKey: string) => {
-    // const fetcher = async (url: string) => 
+    // const fetcher = async (url: string) =>
     // const { data, error, isLoading } = useSWR(
     //   '/api/units',
     //   fetcher
     // )
 
-    const data = await axios.get('/api/units', { params: { unitId: unitKey } })
+    setUnit(unitKey);
+    const data = await axios
+      .get('/api/grade', { params: { unitId: unitKey } })
       .then((res) => res.data);
     console.log(data);
-    
-    setUnit(unitKey)
-  }
+  };
   return (
     <div>
-      <Dropdown name="Ngành" value={unit}>
+      <Dropdown name='Ngành' value={unit}>
         {UNIT_MENU.map((item, index) => {
-          return <DropdownItem key={item.key} value={item.key} name={item.label} changeSelection={() => changeUnit(item.key)} />
+          return (
+            <DropdownItem
+              key={item.key}
+              value={item.key}
+              name={item.label}
+              changeSelection={() => changeUnit(item.key)}
+            />
+          );
         })}
       </Dropdown>
     </div>
-  )
-}
+  );
+};
 
 export default FilterStudent;

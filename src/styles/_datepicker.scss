@@ -1,0 +1,47 @@
+.rmdp-range:has(.attend-class) {
+  background-color: #fe9627;
+}
+
+.rmdp-range:has(.attend-mass) {
+  @apply bg-primary;
+}
+
+.rmdp-range:has(.attend-class):has(.attend-mass) {
+  @apply bg-gradient-to-r from-50% from-[#FE9627] to-primary to-50%;
+}
+
+.rmdp-range span:hover {
+  background-color: transparent !important;
+}
+
+div.attend-class {
+  background-color: #fe9627;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+div.attend-mass {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  @apply bg-primary;
+}
+
+.un-availble {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.un-availble p {
+  margin: 0;
+}
+.rmdp-week > .rmdp-week-day:first-child,
+.rmdp-week > .rmdp-day:first-child {
+  color: #cc0303;
+  &:has(.attend-class),
+  &:has(.attend-mass) {
+    color: white;
+  }
+}
