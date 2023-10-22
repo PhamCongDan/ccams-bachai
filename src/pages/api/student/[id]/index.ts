@@ -20,8 +20,8 @@ const getAttendanceStudent = async (id: string | string[] | undefined) => {
       FROM [DIEM_DANH]
       LEFT OUTER JOIN [GIAOLYVIEN] ON [GIAOLYVIEN].MAGLV = [DIEM_DANH].NGUOI_DIEMDANH
       WHERE [DIEM_DANH].MAHOCVIEN = '${id}'
-      AND [DIEM_DANH].NGAYDIEMDANH < '${formatDateToString(today)}'
-      AND [DIEM_DANH].NGAYDIEMDANH > '${formatDateToString(lastYear)}'
+      AND [DIEM_DANH].NGAYDIEMDANH <= '${formatDateToString(today)}'
+      AND [DIEM_DANH].NGAYDIEMDANH >= '${formatDateToString(lastYear)}'
       ORDER BY NGAYDIEMDANH DESC
     `;
   try {
